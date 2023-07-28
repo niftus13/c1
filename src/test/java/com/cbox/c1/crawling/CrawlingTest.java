@@ -1,6 +1,5 @@
 package com.cbox.c1.crawling;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,11 +11,9 @@ public class CrawlingTest {
     Crawling crawling = new Crawling();
 
     @Test
-    public void test1 () throws InterruptedException {
+    public void test1 () {
         String url = "http://www.lotteria.com/menu/Menu_all.asp";
-        String url1 = "https://bbs.ruliweb.com/market/board/1020?&cate=12";
         crawling.Chrome();
-//        crawling.Crawling(url);
         crawling.Crawlingimg(url);
 
     }
@@ -43,6 +40,16 @@ public class CrawlingTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void lotte(){
+
+        String url = "http://www.lotteria.com/menu/Menu_all.asp";
+        crawling.Chrome();
+        crawling.CrawlingLotte(url);
+
+
     }
 
 

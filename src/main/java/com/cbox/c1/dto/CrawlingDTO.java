@@ -2,9 +2,6 @@ package com.cbox.c1.dto;
 
 import lombok.*;
 
-import java.io.File;
-import java.util.Map;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,14 +11,12 @@ public class CrawlingDTO {
 
 
     private Integer cno;
-    private String pfran;
+    private String brand;
     private String pname;
     private int price;
     private String pdesc;
-    Map<String, String> pinfo;
-    private String pal;
-
-    private String pFname;
+    private String pKcal;
+    private String fileName;
 
 
 }
