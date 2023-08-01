@@ -2,8 +2,6 @@ package com.cbox.c1.crawling;
 
 import com.cbox.c1.dto.CrawlingDTO;
 
-
-import com.cbox.c1.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.*;
