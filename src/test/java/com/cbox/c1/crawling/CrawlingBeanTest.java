@@ -196,9 +196,18 @@ public class CrawlingBeanTest {
 
     @Test
     public void momsCrawlingTest(){
-        String url = "https://map.naver.com/v5/search/%EB%A7%98%EC%8A%A4%ED%84%B0%EC%B9%98/place/1547874928?c=15,0,0,0,dh&placePath=%3Fentry%253Dbmp";
+        String url = "https://map.naver.com/v5/search/%EB%A7%98%EC%8A%A4%ED%84%B0%EC%B9%98/place/570774588?placePath=%3Fentry=pll%26from=nx%26fromNxList=true&c=15,0,0,0,dh";
         crawling.Chrome();
-        crawling.momsCrawling(url);
+        List<CrawlingDTO> moms = crawling.momsCrawling(url);
+        moms.forEach(dto -> {
+            Product product = Product.builder()
+                    .pname(dto.getPname())
+                    .price(dto.getPrice())
+                    .brand(dto.getBrand())
+                    .fileName(dto.getFileName())
+                    .build();
+            productRepository.save(product);
+        });
     }
 
 

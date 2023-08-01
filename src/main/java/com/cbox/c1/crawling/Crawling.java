@@ -2,7 +2,6 @@ package com.cbox.c1.crawling;
 
 import com.cbox.c1.dto.CrawlingDTO;
 
-import com.cbox.c1.entity.Product;
 
 import com.cbox.c1.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Actions;
+
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -27,11 +26,7 @@ import java.util.UUID;
 @Log4j2
 @RequiredArgsConstructor
 public class Crawling {
-    private ProductRepository productRepository;
 
-    public void YourClassName(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
 
     List<CrawlingDTO> dtos = new ArrayList<>();
@@ -183,10 +178,10 @@ public class Crawling {
 
 
 
-    public void momsCrawling(String url){
+    public List<CrawlingDTO> momsCrawling(String url){
         String brand = "momstouch";
-        driver.get("https://map.naver.com/v5/search/%EB%A7%98%EC%8A%A4%ED%84%B0%EC%B9%98/place/570774588?placePath=%3Fentry=pll%26from=nx%26fromNxList=true&c=15,0,0,0,dh");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        driver.get(url);
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));  // 페이지 불러오는 여유시간.
 
         driver.switchTo().frame(driver.findElement(By.cssSelector("iframe#entryIframe")));
@@ -203,10 +198,7 @@ public class Crawling {
         List<WebElement> burgers = driver.findElements(By.xpath("//ul[contains(@class,'_d0Hx')]/li[not(contains(@class,'yhGu6 WhDCv'))]"));
         burgers.forEach(ele -> log.info(ele.getText()));
 
-        List<String> pnames = new ArrayList<>();
-        List<Integer> prices = new ArrayList<>();
-//        List<WebElement> fileNames = new ArrayList<>();
-
+        List<CrawlingDTO> dtos = new ArrayList<>();
 
         burgers.forEach(webElement -> {
             String pname = webElement.findElement(By.className("lPzHi")).getText();
@@ -214,19 +206,22 @@ public class Crawling {
             String forImg = webElement.findElement(By.className("K0PDV")).getCssValue("background-image");
             String imgUrl = forImg.substring(forImg.indexOf("\"") + 1, forImg.lastIndexOf("\""));
             String fileName = DownloadImg(imgUrl,pname,brand);
-            Integer intPrice = Integer.parseInt(price.getText().replaceAll("[^0-9]", ""));
-            pnames.add(pname);
-            prices.add(intPrice);
+            int intPrice = Integer.parseInt(price.getText().replaceAll("[^0-9]", ""));
+
+            CrawlingDTO dto = CrawlingDTO.builder()
+                    .pname(pname)
+                    .price(intPrice)
+                    .brand(brand)
+                    .fileName(fileName)
+                    .build();
+            dtos.add(dto);
             log.info(pname + " __ "+intPrice);
         });
 
         log.info("================================");
-        log.info(burgers.size()+" : "+ pnames.size());
+        log.info(burgers.size());
 
-
-
-
-
+        return dtos;
 
     }
 
