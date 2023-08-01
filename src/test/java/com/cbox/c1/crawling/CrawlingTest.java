@@ -1,12 +1,19 @@
 package com.cbox.c1.crawling;
 
+import com.cbox.c1.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Log4j2
+@RequiredArgsConstructor
 public class CrawlingTest {
+
+    @Autowired
+    private ProductRepository productRepository;
 
     Crawling crawling = new Crawling();
 
@@ -19,7 +26,7 @@ public class CrawlingTest {
     }
 
     @Test
-    public void test2(){
+    public void testEventCrawling(){
         String url = "https://bbs.ruliweb.com/market/board/1020?search_type=subject&search_key=%EB%B2%84%EA%B1%B0%ED%82%B9&cate=12";
         crawling.Chrome();
 

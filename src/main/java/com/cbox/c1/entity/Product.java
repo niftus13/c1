@@ -1,17 +1,21 @@
-package com.cbox.c1.dto;
+package com.cbox.c1.entity;
 
-import lombok.*;
-
-import java.util.List;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@Entity
+@Table(name = "product_Crowling")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class CrawlingDTO {
+@Builder
+public class Product {
 
-    //PK
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cno;
     // 브랜드 이름
     private String brand;
@@ -25,7 +29,6 @@ public class CrawlingDTO {
     private String pKcal;
     // 이미지 파일 이름
     private String fileName;
-
 
 
 }
