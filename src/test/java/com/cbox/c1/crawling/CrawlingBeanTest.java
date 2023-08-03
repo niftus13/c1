@@ -31,10 +31,27 @@ public class CrawlingBeanTest {
                     .price(dto.getPrice())
                     .brand(dto.getBrand())
                     .fileName(dto.getFileName())
-                    .pKcal(dto.getPKcal())
                     .build();
             productRepository.save(product);
         }
+    }
+    @Test
+    public void CrawlingKfcTest(){
+        String url = "https://map.naver.com/v5/search/KFC%20%EA%B4%91%ED%99%94%EB%AC%B8%EC%A0%90/place/11808181?c=15,0,0,0,dh&isCorrectAnswer=true";
+
+        crawling.Chrome();
+        List<CrawlingDTO> kfc = crawling.crawlingKFC(url);
+        for (CrawlingDTO dto : kfc){
+            Product product = Product.builder()
+                    .pname(dto.getPname())
+                    .price(dto.getPrice())
+                    .brand(dto.getBrand())
+                    .fileName(dto.getFileName())
+                    .build();
+            productRepository.save(product);
+        }
+
+
     }
 
 @Test
@@ -52,6 +69,22 @@ public class CrawlingBeanTest {
             productRepository.save(product);
         }
 
+    }
+
+    @Test
+    public void burgerKingCrawlingTest(){
+        String url = "https://map.naver.com/v5/search/%EB%B2%84%EA%B1%B0%ED%82%B9/place/11782345?c=15,0,0,0,dh&placePath=%2FbookingDeliveryItem";
+        crawling.Chrome();
+        List<CrawlingDTO> king = crawling.BurgerKing(url);
+        king.forEach(dto -> {
+            Product product = Product.builder()
+                    .pname(dto.getPname())
+                    .price(dto.getPrice())
+                    .brand(dto.getBrand())
+                    .fileName(dto.getFileName())
+                    .build();
+            productRepository.save(product);
+        });
     }
 
     @Test

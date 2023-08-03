@@ -6,25 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "product_Crowling")
+@Data
+@Table(name="eventCrawling")
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Product {
-
+public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cno;
-    // 브랜드 이름
+    private Integer pEno;
+    private String eventInfo;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private String brand;
-    // 상품이름
-    private String pname;
-    // 가격
-    private int price;
-    // 이미지 파일 이름
-    private String fileName;
-
 
 }

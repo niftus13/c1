@@ -2,6 +2,7 @@ package com.cbox.c1.crawling;
 
 import com.cbox.c1.dto.CrawlingDTO;
 
+import com.cbox.c1.dto.CrawlingEventDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.*;
@@ -25,8 +26,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class Crawling {
 
-
-
     List<CrawlingDTO> dtos = new ArrayList<>();
 
     private WebDriver driver;
@@ -43,6 +42,7 @@ public class Crawling {
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-gpu");
+//        options.addArguments("--window-size=1920,1080");
         options.setCapability("ignoreProtectedModeSettings", true);
         // weDriver 생성.
         driver = new ChromeDriver(options);
@@ -71,7 +71,6 @@ public class Crawling {
 
             List<WebElement> forPname = driver.findElements(By.className("product-title"));
             List<WebElement> forPrice = driver.findElements(By.className("starting-price"));
-            List<WebElement> forKcal = driver.findElements(By.className("product-nutritional-info"));
             List<WebElement> forImg = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("[class = img-block]")));
 
 
@@ -92,7 +91,6 @@ public class Crawling {
                 dto.setPname(pname);
                 dto.setPrice(intPrice);
                 dto.setBrand(brand);
-                dto.setPKcal(forKcal.get(j).getText());
                 dto.setFileName(fileName);
                 dtos.add(dto);
             }
@@ -174,8 +172,6 @@ public class Crawling {
         return dtos;
     }
 
-
-
     public List<CrawlingDTO> momsCrawling(String url){
         String brand = "momstouch";
         driver.get(url);
@@ -187,15 +183,20 @@ public class Crawling {
         log.info(test1.getText());
         test1.click();
 
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(7));  // 페이지 불러오는 여유시간.
+
         List<WebElement> buttons2 = driver.findElements(By.xpath("//a[@class = 'fvwqf']"));
+
+
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));  // 페이지 불러오는 여유시간.
-        buttons2.forEach(WebElement::click);
+        buttons2.forEach(webElement -> {
+            jsExecutor.executeScript("window.scrollBy(0, 500)");
+            webElement.click();
+        });
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
         List<WebElement> burgers = driver.findElements(By.xpath("//ul[contains(@class,'_d0Hx')]/li[not(contains(@class,'yhGu6 WhDCv'))]"));
-        burgers.forEach(ele -> log.info(ele.getText()));
-
         List<CrawlingDTO> dtos = new ArrayList<>();
 
         burgers.forEach(webElement -> {
@@ -218,7 +219,168 @@ public class Crawling {
 
         log.info("================================");
         log.info(burgers.size());
+        driver.quit();
+        return dtos;
 
+    }
+
+    public List<CrawlingDTO> BurgerKing(String url){
+        List<CrawlingDTO> dtos = new ArrayList<>();
+        String brand = "burgerKing";
+
+        driver.get(url);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.switchTo().frame(driver.findElement(By.cssSelector("iframe#entryIframe")));
+
+        List<WebElement> burgerList = driver.findElements(By.xpath("//div[contains(@class,'item_info')]/a[contains(@class,'info_link')]"));
+        burgerList.forEach(webElement -> {
+            String pname = webElement.findElement(By.className("tit")).getText();
+            WebElement price = webElement.findElement(By.className("price"));
+            String forImg = "";
+            try{
+                forImg = webElement.findElement(By.className("img")).getAttribute("src");
+            }catch(Exception ignored){
+
+            }
+
+            String fileName = DownloadImg(forImg,pname,brand);
+            int intPrice = Integer.parseInt(price.getText().replaceAll("[^0-9]", ""));
+
+            CrawlingDTO dto = CrawlingDTO.builder()
+                    .pname(pname)
+                    .price(intPrice)
+                    .brand(brand)
+                    .fileName(fileName)
+                    .build();
+            dtos.add(dto);
+            log.info(brand + pname + " __ "+intPrice);
+            log.info(forImg);
+        });
+        log.info("================================");
+        log.info(burgerList.size());
+        driver.quit();
+        return dtos;
+    }
+
+    public List<CrawlingDTO> crawlingKFC(String url){
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+        String brand = "kfc";
+        driver.get(url);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(7));  // 페이지 불러오는 여유시간.
+
+        driver.switchTo().frame(driver.findElement(By.cssSelector("iframe#entryIframe")));
+        jsExecutor.executeScript("window.scrollBy(0, 500)");
+        WebElement test1 = driver.findElement(By.className("fvwqf"));
+        log.info(test1.getText());
+        test1.click();
+
+
+
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+        List<WebElement> burgers = driver.findElements(By.xpath("//ul[contains(@class,'order_list_area')]/li[(contains(@class,'order_list_item'))]"));
+
+        List<CrawlingDTO> dtos = new ArrayList<>();
+
+        burgers.forEach(webElement -> {
+            String pname = webElement.findElement(By.className("tit")).getText();
+            WebElement price = webElement.findElement(By.className("price"));
+            String forImg = "";
+            try{
+                forImg = webElement.findElement(By.className("img")).getAttribute("src");
+            }catch(Exception ignored){
+
+            }
+
+            String fileName = DownloadImg(forImg,pname,brand);
+            int intPrice = Integer.parseInt(price.getText().replaceAll("[^0-9]", ""));
+
+            CrawlingDTO dto = CrawlingDTO.builder()
+                    .pname(pname)
+                    .price(intPrice)
+                    .brand(brand)
+                    .fileName(fileName)
+                    .build();
+            dtos.add(dto);
+            log.info(brand + pname + " __ "+intPrice);
+            log.info(forImg);
+        });
+
+        log.info("================================");
+        log.info(burgers.size());
+        driver.quit();
+        return dtos;
+
+
+    }
+    public List<CrawlingEventDTO> CrawlingEvent(String url) throws InterruptedException {
+
+        // url on
+        driver.get(url);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        log.info("selenium : " + driver.getTitle());
+        log.info("url : " + driver.getCurrentUrl());
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+
+        List<CrawlingEventDTO> dtos = new ArrayList<>();
+
+        List<WebElement> testList = driver.findElements(By.xpath("//tr[contains(@class,'table_body blocktarget')]/td[contains(@class ,'subject')]/div/a[@class='deco']"));
+        List<String> listUrls = new ArrayList<>();
+        testList.forEach(ele -> {
+            log.info(ele.getAttribute("href"));
+            listUrls.add(ele.getAttribute("href"));
+        });
+
+        for (WebElement ele : testList){
+            String listText = ele.getText();
+            String brand = " ";
+            if (listText.contains("버거킹") || listText.contains("와퍼")) {
+                brand = "버거킹";
+            }
+            log.info(brand);
+            CrawlingEventDTO dto = CrawlingEventDTO.builder()
+                    .eventInfo(listText)
+                    .brand(brand)
+                    .build();
+            dtos.add(dto);
+        }
+
+//        for(int i=0;i< testList.size()-20;i++){
+//            Thread.sleep(2000);
+//            String listText = testList.get(i).getText();
+//            String brand = " ";
+//            if (listText.contains("버거킹") || listText.contains("와퍼")) {
+//                brand = "버거킹";
+//            }
+//            log.info(brand);
+//            try {
+//                driver.navigate().to(listUrls.get(i));
+//            } catch (StaleElementReferenceException e) {
+//                log.info("___________________________error__________________________"+i+9);
+//                jsExecutor.executeScript("window.scrollBy(0, 500)");
+//                driver.navigate().to(url);
+//                String xpath = "//*[@id=\"board_list\"]/div/div[2]/table/tbody/tr["+(i+9)+"]/td[3]/div/a[1]";
+//                String tempUrl = driver.findElement(By.xpath(xpath)).getAttribute("href");
+//
+//                driver.navigate().to(tempUrl);
+//            }
+//
+//            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+//            log.info("----------------IN---------------");
+//            List<WebElement> imgs;
+//            jsExecutor.executeScript("window.scrollBy(0, 500)");
+//            imgs = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//a[@class = 'img_load']/img")));
+//            log.info(imgs.size());
+//
+//            CrawlingEventDTO dto = CrawlingEventDTO.builder()
+//
+//                    .build();
+//
+//            driver.navigate().back();
+//            log.info("---------back-------");
+//        } // for end
+
+        driver.quit();
         return dtos;
 
     }
@@ -226,49 +388,6 @@ public class Crawling {
 
 
 
-
-
-
-
-
-    public void CrawlingEvent(String url) {
-        driver.get(url);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        log.info("selenium : " + driver.getTitle());
-        log.info("url : " + driver.getCurrentUrl());
-
-        WebElement test = driver.findElement(By.xpath("//button[contains(@class ,'btn_ruli_dark')]"));
-        log.info(test.getText());
-        log.info(test.getClass());
-
-
-
-
-        List<WebElement> testList = driver.findElements(By.xpath("//*[@class = 'table_body blocktarget']/td[3]/div/a[1]"));
-        for (WebElement webElement : testList) {
-
-            String listText = webElement.getText();
-            String brand = listText.substring(listText.indexOf("[") + 1, listText.indexOf("]"));
-            String brand1 = " ";
-            if (listText.contains("버거킹") || listText.contains("와퍼")) {
-                brand1 = "버거킹";
-            }
-            String eventInfo = listText.substring(listText.indexOf("]") + 2);
-
-
-            log.info(brand);
-            log.info(brand1);
-            log.info(listText);
-            log.info(eventInfo);
-
-            log.info("-----------------------------");
-
-
-        }
-
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
-    }
 
     public void Crawlingimg(String url) {
         driver.get(url);
@@ -290,18 +409,13 @@ public class Crawling {
         log.info(imgUrl);
     }
 
-    public static class DownloadException extends RuntimeException{
-        public DownloadException(String msg){
-            super(msg);
-        }
-    }
+
     public String DownloadImg(String imgUrl ,String originalFileName,String brand){
 
         String path = "C:\\webserver2\\nginx-1.24.0\\html\\"+brand;
 
-
         if (imgUrl == null || imgUrl.length()==0){
-            throw new DownloadException("Url is NULL");
+            return "";
         }
 
         try {
