@@ -327,17 +327,37 @@ public class Crawling {
         List<WebElement> testList = driver.findElements(By.xpath("//tr[contains(@class,'table_body blocktarget')]/td[contains(@class ,'subject')]/div/a[@class='deco']"));
         List<String> listUrls = new ArrayList<>();
         testList.forEach(ele -> {
-            log.info(ele.getAttribute("href"));
             listUrls.add(ele.getAttribute("href"));
         });
 
-        for (WebElement ele : testList){
-            String listText = ele.getText();
+        for (int i=0;i<7;i++){
+            jsExecutor.executeScript("window.scrollBy(0, 200)");
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+            String listText = null;
+            try {
+                listText = testList.get(i).getText();
+            } catch (Exception e) {
+                String tempXpath = "//tr[contains(@class,'table_body blocktarget')]["+i+"]/td[contains(@class ,'subject')]/div/a[@class='deco']";
+                log.info("xpath : " +tempXpath);
+                listText = driver.findElement(By.xpath(tempXpath)).getText();
+            }
+
             String brand = " ";
             if (listText.contains("버거킹") || listText.contains("와퍼")) {
                 brand = "버거킹";
             }
             log.info(brand);
+
+            if(listText.endsWith("...")||listText.endsWith("~)")){
+                driver.navigate().to(listUrls.get(i));
+
+                driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+                listText = driver.findElement(By.className("subject_inner_text")).getText();
+                log.info(listText);
+                driver.navigate().back();
+            }
+
             CrawlingEventDTO dto = CrawlingEventDTO.builder()
                     .eventInfo(listText)
                     .brand(brand)
