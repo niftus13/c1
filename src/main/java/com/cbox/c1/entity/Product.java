@@ -16,7 +16,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cno;
+    private Long cno;
     // 브랜드 이름
     private String brand;
     // 상품이름
