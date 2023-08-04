@@ -18,6 +18,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -324,9 +325,13 @@ public class Crawling {
 
         List<CrawlingEventDTO> dtos = new ArrayList<>();
 
-        List<WebElement> testList = driver.findElements(By.xpath("//tr[contains(@class,'table_body blocktarget')]/td[contains(@class ,'subject')]/div/a[@class='deco']"));
+        List<WebElement> testList = driver.findElements(By.xpath("//tr[contains(@class,'table_body blocktarget')]/td[contains(@class ,'subject')]/div/a[contains(@class,'deco')]"));
+
         List<String> listUrls = new ArrayList<>();
-        testList.forEach(ele -> {
+
+
+        testList.forEach(ele->{
+            log.info(ele.getText());
             listUrls.add(ele.getAttribute("href"));
         });
 
@@ -346,7 +351,17 @@ public class Crawling {
             String brand = " ";
             if (listText.contains("버거킹") || listText.contains("와퍼")) {
                 brand = "버거킹";
+            }else if(listText.contains("맥도날드")||listText.contains("맥")){
+                brand = "맥도날드";
+            }else if(listText.contains("롯데리아")||listText.contains("롯데")){
+                brand = "롯데리아";
+            }else if(listText.contains("맘스터치")){
+                brand = "맘스터치";
+            }else if(listText.contains("KFC")){
+                brand = "KFC";
             }
+
+
             log.info(brand);
 
             if(listText.endsWith("...")||listText.endsWith("~)")){
@@ -357,7 +372,9 @@ public class Crawling {
                 log.info(listText);
                 driver.navigate().back();
             }
-
+            log.info("==============================================================");
+            log.info(listText);
+            log.info("==============================================================");
             CrawlingEventDTO dto = CrawlingEventDTO.builder()
                     .eventInfo(listText)
                     .brand(brand)
