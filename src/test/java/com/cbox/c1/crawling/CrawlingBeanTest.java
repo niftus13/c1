@@ -24,7 +24,7 @@ public class CrawlingBeanTest {
     public void CrawlingMacProductTestInsert(){
         String url = "https://www.mcdelivery.co.kr/kr/browse/menu.html?daypartId=1&catId=10";
         crawling.Chrome();
-        List<CrawlingDTO> mac = crawling.CrawlingMac(url);
+        List<CrawlingDTO> mac = crawling.crawlingMac(url);
         for (CrawlingDTO dto : mac) {
             Product product = Product.builder()
                     .pname(dto.getPname())
@@ -58,7 +58,7 @@ public class CrawlingBeanTest {
     public void CrawlingLotteProductTestInsert(){
         String url = "https://www.lotteeatz.com/brand/ria";
         crawling.Chrome();
-        List<CrawlingDTO> lotte = crawling.CrawlingLotte(url);
+        List<CrawlingDTO> lotte = crawling.crawlingLotte(url);
         for (CrawlingDTO dto : lotte){
             Product product = Product.builder()
                     .pname(dto.getPname())
@@ -75,7 +75,7 @@ public class CrawlingBeanTest {
     public void burgerKingCrawlingTest(){
         String url = "https://map.naver.com/v5/search/%EB%B2%84%EA%B1%B0%ED%82%B9/place/11782345?c=15,0,0,0,dh&placePath=%2FbookingDeliveryItem";
         crawling.Chrome();
-        List<CrawlingDTO> king = crawling.BurgerKing(url);
+        List<CrawlingDTO> king = crawling.burgerKing(url);
         king.forEach(dto -> {
             Product product = Product.builder()
                     .pname(dto.getPname())

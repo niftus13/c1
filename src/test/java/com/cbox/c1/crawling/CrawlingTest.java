@@ -31,7 +31,7 @@ public class CrawlingTest {
         crawling.Chrome();
 
         try {
-            crawling.CrawlingEvent(url);
+            crawling.crawlingEvent(url);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -43,7 +43,7 @@ public class CrawlingTest {
         crawling.Chrome();
 
         try {
-            crawling.CrawlingMac(url);
+            crawling.crawlingMac(url);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -54,7 +54,7 @@ public class CrawlingTest {
 
         String url = "http://www.lotteria.com/menu/Menu_all.asp";
         crawling.Chrome();
-        crawling.CrawlingLotte(url);
+        crawling.crawlingLotte(url);
 
 
     }

@@ -52,7 +52,7 @@ public class Crawling {
         log.info(driver);
 
     }
-    public List<CrawlingDTO> CrawlingMac(String url) {
+    public List<CrawlingDTO> crawlingMac(String url) {
         int a = 0;
 
         driver.get(url);
@@ -115,7 +115,7 @@ public class Crawling {
         return dtos;
 
     }
-    public List<CrawlingDTO> CrawlingLotte(String url) {
+    public List<CrawlingDTO> crawlingLotte(String url) {
         driver.get(url);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));  // 페이지 불러오는 여유시간.
         //롯데리아 크롤링
@@ -225,7 +225,7 @@ public class Crawling {
 
     }
 
-    public List<CrawlingDTO> BurgerKing(String url){
+    public List<CrawlingDTO> burgerKing(String url){
         List<CrawlingDTO> dtos = new ArrayList<>();
         String brand = "burgerKing";
 
@@ -313,7 +313,7 @@ public class Crawling {
 
 
     }
-    public List<CrawlingEventDTO> CrawlingEvent(String url) throws InterruptedException {
+    public List<CrawlingEventDTO> crawlingEvent(String url) throws InterruptedException {
 
         // url on
         driver.get(url);

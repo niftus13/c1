@@ -34,7 +34,7 @@ public class EventCrawling {
         String urlMoms = "https://bbs.ruliweb.com/market/board/1020?search_type=subject&search_key=%EB%A7%98%EC%8A%A4%ED%84%B0%EC%B9%98";
         String urlKfc = "https://bbs.ruliweb.com/market/board/1020?search_type=subject&search_key=KFC";
         crawling.Chrome();
-        List<CrawlingEventDTO> events = crawling.CrawlingEvent(urlKfc);
+        List<CrawlingEventDTO> events = crawling.crawlingEvent(urlKfc);
 
         for (CrawlingEventDTO dto : events){
 
