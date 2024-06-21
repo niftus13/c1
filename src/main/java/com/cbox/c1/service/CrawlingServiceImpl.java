@@ -15,7 +15,7 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class CrawlingServiceImpl implements CrawlingService{
+public class CrawlingServiceImpl implements CrawlingService {
 
     private final ProductRepository productRepository;
     private final Crawling crawling;
@@ -48,7 +48,6 @@ public class CrawlingServiceImpl implements CrawlingService{
                     dtos = crawling.momsCrawling(url);
                     break;
                 default:
-                    // Handle unknown category if necessary
                     break;
             }
 

@@ -176,7 +176,7 @@ public class Crawling {
     public List<CrawlingDTO> momsCrawling(String url){
         String brand = "momstouch";
         driver.get(url);
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));  // 페이지 불러오는 여유시간.
 
         driver.switchTo().frame(driver.findElement(By.cssSelector("iframe#entryIframe")));
